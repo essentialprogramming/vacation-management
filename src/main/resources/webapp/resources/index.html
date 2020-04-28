@@ -16,11 +16,11 @@
 <button onclick="previous()">Previous</button>
 
 <h1>Add new destination : </h1>
-<form id="form" onsubmit="postData()">
+<form id="form" onsubmit="postData(event)">
     <input id="city" name="city" placeholder="City" type="text" required>
     <input id="country" name="country" placeholder="Country" type="text" required>
     <input id="description" name="description" placeholder="Description" type="text" required>
-    <input id="tags" name="tags" placeholder="Tags" type="text" required>
+    <input id="targets" name="targets" placeholder="Targets" type="text" required>
     <input id="cost" name="cost" placeholder="Cost" type="number" required>
 
     <input type="submit" value="Submit">
@@ -36,6 +36,11 @@ var li;
 function next() {
             var items;
             var url = '/api/next/'+startIndex
+
+            while (ul.lastElementChild) {
+                 ul.removeChild(ul.lastElementChild);
+            }
+
             fetch(url)
                          .then(res => res.json())
                          .then(json => {
@@ -45,7 +50,6 @@ function next() {
                                     ul.appendChild(li)
 
                                     li.innerHTML += "<strong>City: </strong>" + dest.city + ", <strong> Country: </strong>" + dest.country;
-                                    console.log(items)
                             })
                          })
                          .catch(function(error) {
@@ -58,6 +62,9 @@ function previous() {
             var items;
             startIndex = startIndex - 4
             var url = 'api/previous/'+startIndex
+             while (ul.lastElementChild) {
+                 ul.removeChild(ul.lastElementChild);
+            }
             fetch(url)
                          .then(res => res.json())
                          .then(json => {
@@ -67,7 +74,6 @@ function previous() {
                                     ul.appendChild(li)
 
                                     li.innerHTML += "<strong>City: </strong>" + dest.city + ", <strong> Country: </strong>" + dest.country;
-                                    console.log(items)
                             })
                          })
                          .catch(function(error) {
@@ -77,16 +83,33 @@ function previous() {
 }
 
 
-function postData() {
-    const form = document.getElementById('form');
-    let data = new FormData();
-    data.append('city', form.city.value);
-    data.append('country', form.country.value);
-    data.append('description', form.description.value);
-    data.append('tags', form.tags.value);
-    data.append('cost', form.cost.value);
+function formDataToJson(formElement) {
 
-    fetch('/api/destination', {method: 'POST', body: JSON.stringify(data),  headers: {
+	var $this = formElement
+		, viewArr = $this.serializeArray()
+		, view = {};
+
+	for (var i in viewArr) {
+		view[viewArr[i].name] = viewArr[i].value;
+	}
+
+  return view;
+}
+
+function postData(event) {
+    event.preventDefault();
+    const form = document.getElementById('form');
+    let rawData = new FormData(form);
+
+    let data = {};
+    for(let pair of rawData.entries()) {
+     data[pair[0]] = pair[1];
+    }
+    var targetList = data.targets.split(",");
+    data.targets = targetList
+    let contactData = JSON.stringify(data);
+
+    fetch('/api/destination', {method: 'POST', body: contactData,  headers: {
             'Content-Type': 'application/json'}}
             )
 }
@@ -94,8 +117,8 @@ function postData() {
 
 
 
-</script>
 
+</script>
 
 
 </body>
