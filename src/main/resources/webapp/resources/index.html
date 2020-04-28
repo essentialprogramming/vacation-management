@@ -8,23 +8,41 @@
 
 <body>
 
-<h1>Unordered list of destinations using fetch : </h1>
+<h1>Destinations : </h1>
 <ul id="list"></ul>
 <div id="destinationList"></div>
 
+<button onclick="myFunction()">View destinations</button>
+<button onclick="next()">Next</button>
+
+
+<h1>Add new destination : </h1>
+<form id="form" onsubmit="postData()">
+    <input id="city" name="city" placeholder="City" type="text" required>
+    <input id="country" name="country" placeholder="Country" type="text" required>
+    <input id="description" name="description" placeholder="Description" type="text" required>
+    <input id="tags" name="tags" placeholder="Tags" type="text" required>
+    <input id="cost" name="cost" placeholder="Cost" type="number" required>
+
+    <input type="submit" value="Submit">
+</form>
+
 <script>
+startIndex = 0
+
+var ul = document.getElementById("list");
+document.getElementById("destinationList").appendChild(ul);
+var li;
 
 function myFunction() {
-  var ul = document.getElementById("list");
-                  document.getElementById("destinationList").appendChild(ul);
-
                   var items;
-                  fetch('/api/destinations')
+                  var url = '/api/next/'+startIndex
+                  fetch(url)
                          .then(res => res.json())
                          .then(json => {
                                 items = json
                                 items.forEach(function(dest){
-                                    var li = document.createElement('li')
+                                    li = document.createElement('li')
                                     ul.appendChild(li)
                                     li.innerHTML += "<strong>City: </strong>" + dest.city + ", <strong> Country: </strong>" + dest.country;
                                     console.log(items)
@@ -33,13 +51,53 @@ function myFunction() {
                          .catch(function(error) {
                                 console.log(error);
                          });
+                  startIndex = startIndex + 3
+                 console.log(startIndex)
 }
+
+function next() {
+            var items;
+            startIndex = startIndex + 1
+            var url = '/api/next/'+startIndex
+            fetch(url)
+                         .then(res => res.json())
+                         .then(json => {
+                                items = json
+                                items.forEach(function(dest){
+                                    li = document.createElement('li')
+                                    ul.appendChild(li)
+
+                                    li.innerHTML += "<strong>City: </strong>" + dest.city + ", <strong> Country: </strong>" + dest.country;
+                                    console.log(items)
+                            })
+                         })
+                         .catch(function(error) {
+                                console.log(error);
+                         });
+            startIndex = startIndex + 3
+}
+
+
+function postData() {
+    const form = document.getElementById('form');
+    let data = new FormData();
+    data.append('city', form.city.value);
+    data.append('country', form.country.value);
+    data.append('description', form.description.value);
+    data.append('tags', form.tags.value);
+    data.append('cost', form.cost.value);
+
+    fetch('/api/destination', {method: 'POST', body: JSON.stringify(data),  headers: {
+            'Content-Type': 'application/json'}}
+            )
+}
+
 
 
 
 </script>
 
-<button onclick="myFunction()">Previous</button>
+
 
 </body>
 </html>

@@ -13,6 +13,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 @Service
 public class DestinationService {
 
@@ -48,6 +49,16 @@ public class DestinationService {
     public List<Destination> getAll() {
         return repository.findAll().stream()
                 .map(DestinationMapper::entityToDestination)
+                .limit(4)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<Destination> nextDestinations(int startIndex) {
+        List<Destination> allDestinations = repository.findAll().stream()
+                .map(DestinationMapper::entityToDestination)
+                .collect(Collectors.toList());
+
+        return allDestinations.subList(startIndex, startIndex + 4);
     }
 }

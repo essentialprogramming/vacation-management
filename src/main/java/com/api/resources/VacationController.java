@@ -58,5 +58,12 @@ public class VacationController {
         return service.getAll();
     }
 
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/next/{startIndex}")
+    public List<Destination> getNextDestinations(@PathParam("startIndex") int startIndex) {
+        return service.nextDestinations(startIndex);
+    }
+
 
 }
