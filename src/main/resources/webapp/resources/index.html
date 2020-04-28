@@ -33,13 +33,17 @@ var ul = document.getElementById("list");
 document.getElementById("destinationList").appendChild(ul);
 var li;
 
+function clearChildren(){
+    while (ul.lastElementChild) {
+          ul.removeChild(ul.lastElementChild);
+    }
+}
+
 function next() {
             var items;
             var url = '/api/next/'+startIndex
 
-            while (ul.lastElementChild) {
-                 ul.removeChild(ul.lastElementChild);
-            }
+            clearChildren()
 
             fetch(url)
                          .then(res => res.json())
@@ -62,9 +66,7 @@ function previous() {
             var items;
             startIndex = startIndex - 4
             var url = 'api/previous/'+startIndex
-             while (ul.lastElementChild) {
-                 ul.removeChild(ul.lastElementChild);
-            }
+            clearChildren()
             fetch(url)
                          .then(res => res.json())
                          .then(json => {
