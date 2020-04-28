@@ -12,6 +12,19 @@
 <ul id="list"></ul>
 <div id="destinationList"></div>
 
+<form>
+    <label for="countries">Choose a country:</label>
+    <select id="countries" name="countries">
+        <option value="germany" selected>Germany</option>
+        <option value="italy">Italy</option>
+        <option value="spain">Spain</option>
+        <option value="france">France</option>
+    </select>
+</form>
+<br>
+
+
+
 <button onclick="next()">Next</button>
 <button onclick="previous()">Previous</button>
 
@@ -27,6 +40,46 @@
 </form>
 
 <script>
+
+var menu = document.getElementById("countries");
+menu.addEventListener("change", generateData);
+
+function generateData(event) {
+    if (menu.value == 'germany') {
+        getDestinations('Germany')
+    } else if (menu.value == 'italy') {
+        getDestinations('Italy')
+    } else if (menu.value == 'spain') {
+        getDestinations('Spain')
+    } else if (menu.value == 'france') {
+        getDestinations('Franta')
+    }
+}
+
+function getDestinations(countryName){
+
+            var items;
+            var url = '/api/destinations'
+            clearChildren()
+
+            fetch(url)
+                         .then(res => res.json())
+                         .then(json => {
+                                items = json
+                                var result = items.filter(x => x.country === countryName);
+                                result.forEach(function(dest){
+                                    li = document.createElement('li')
+                                    ul.appendChild(li)
+
+                                    li.innerHTML += "<strong>City: </strong>" + dest.city + ", <strong> Country: </strong>" + dest.country;
+                            })
+                         })
+                         .catch(function(error) {
+                                console.log(error);
+                         });
+
+}
+
 startIndex = 0
 
 var ul = document.getElementById("list");

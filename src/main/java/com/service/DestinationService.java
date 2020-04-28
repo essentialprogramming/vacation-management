@@ -50,7 +50,6 @@ public class DestinationService {
     public List<Destination> getAll() {
         return repository.findAll().stream()
                 .map(DestinationMapper::entityToDestination)
-                .limit(4)
                 .collect(Collectors.toList());
     }
 
