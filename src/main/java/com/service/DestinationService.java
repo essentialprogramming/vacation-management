@@ -55,10 +55,10 @@ public class DestinationService {
 
     @Transactional
     public List<Destination> nextDestinations(int startIndex) {
-        List<Destination> allDestinations = repository.findAll().stream()
+        return repository.findAll().stream()
                 .map(DestinationMapper::entityToDestination)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList())
+                .subList(startIndex, startIndex + 4);
 
-        return allDestinations.subList(startIndex, startIndex + 4);
     }
 }
