@@ -8,32 +8,38 @@
 
 <body>
 
-<h1>Unordered list of skills using fetch : </h1>
+<h1>Unordered list of destinations using fetch : </h1>
 <ul id="list"></ul>
-<div id="skillsList"></div>
+<div id="destinationList"></div>
 
 <script>
 
-                  var ul = document.getElementById("list");
-                  document.getElementById("skillsList").appendChild(ul);
+function myFunction() {
+  var ul = document.getElementById("list");
+                  document.getElementById("destinationList").appendChild(ul);
 
                   var items;
-                  fetch('/api/skillsList')
+                  fetch('/api/destinations')
                          .then(res => res.json())
                          .then(json => {
                                 items = json
-                                items.forEach(function(skill){
+                                items.forEach(function(dest){
                                     var li = document.createElement('li')
                                     ul.appendChild(li)
-                                    li.innerHTML += skill.name
+                                    li.innerHTML += "<strong>City: </strong>" + dest.city + ", <strong> Country: </strong>" + dest.country;
                                     console.log(items)
                             })
                          })
                          .catch(function(error) {
                                 console.log(error);
                          });
+}
 
-            </script>
+
+
+</script>
+
+<button onclick="myFunction()">Previous</button>
 
 </body>
 </html>
