@@ -111,9 +111,14 @@ function postData(event) {
     data.targets = targetList
     let contactData = JSON.stringify(data);
 
-    fetch('/api/destination', {method: 'POST', body: contactData,  headers: {
-            'Content-Type': 'application/json'}}
-            )
+    new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+                    xhr.open('POST', '/api/destination');
+                    xhr.setRequestHeader('Content-Type', 'application/json');
+                    xhr.onerror = () => reject(xhr.statusText);
+                    xhr.send(contactData);
+    });
+
 }
 
 
