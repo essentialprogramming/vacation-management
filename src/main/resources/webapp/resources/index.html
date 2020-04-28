@@ -12,9 +12,8 @@
 <ul id="list"></ul>
 <div id="destinationList"></div>
 
-<button onclick="myFunction()">View destinations</button>
 <button onclick="next()">Next</button>
-
+<button onclick="previous()">Previous</button>
 
 <h1>Add new destination : </h1>
 <form id="form" onsubmit="postData()">
@@ -34,30 +33,8 @@ var ul = document.getElementById("list");
 document.getElementById("destinationList").appendChild(ul);
 var li;
 
-function myFunction() {
-                  var items;
-                  var url = '/api/next/'+startIndex
-                  fetch(url)
-                         .then(res => res.json())
-                         .then(json => {
-                                items = json
-                                items.forEach(function(dest){
-                                    li = document.createElement('li')
-                                    ul.appendChild(li)
-                                    li.innerHTML += "<strong>City: </strong>" + dest.city + ", <strong> Country: </strong>" + dest.country;
-                                    console.log(items)
-                            })
-                         })
-                         .catch(function(error) {
-                                console.log(error);
-                         });
-                  startIndex = startIndex + 3
-                 console.log(startIndex)
-}
-
 function next() {
             var items;
-            startIndex = startIndex + 1
             var url = '/api/next/'+startIndex
             fetch(url)
                          .then(res => res.json())
@@ -74,7 +51,29 @@ function next() {
                          .catch(function(error) {
                                 console.log(error);
                          });
-            startIndex = startIndex + 3
+            startIndex = startIndex + 4
+}
+
+function previous() {
+            var items;
+            startIndex = startIndex - 4
+            var url = 'api/previous/'+startIndex
+            fetch(url)
+                         .then(res => res.json())
+                         .then(json => {
+                                items = json
+                                items.forEach(function(dest){
+                                    li = document.createElement('li')
+                                    ul.appendChild(li)
+
+                                    li.innerHTML += "<strong>City: </strong>" + dest.city + ", <strong> Country: </strong>" + dest.country;
+                                    console.log(items)
+                            })
+                         })
+                         .catch(function(error) {
+                                console.log(error);
+                         });
+
 }
 
 

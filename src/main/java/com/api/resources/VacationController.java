@@ -65,5 +65,12 @@ public class VacationController {
         return service.nextDestinations(startIndex);
     }
 
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/previous/{previousIndex}")
+    public List<Destination> getpreviousDestinations(@PathParam("previousIndex") int previousIndex) {
+        return service.previousDestinations(previousIndex);
+    }
+
 
 }

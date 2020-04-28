@@ -61,4 +61,13 @@ public class DestinationService {
                 .subList(startIndex, startIndex + 4);
 
     }
+
+    @Transactional
+    public List<Destination> previousDestinations(int startIndex) {
+        return repository.findAll().stream()
+                .map(DestinationMapper::entityToDestination)
+                .collect(Collectors.toList())
+                .subList(startIndex-4, startIndex );
+
+    }
 }
