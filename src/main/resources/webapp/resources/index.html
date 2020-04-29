@@ -3,28 +3,30 @@
 
 <head>
     <meta charset="UTF-8">
-    <title> Skills </title>
+    <title> Destinations </title>
 </head>
 
 <body>
 
-<h1>Destinations : </h1>
+<h1>Destinations by country : </h1>
 <ul id="list"></ul>
 <div id="destinationList"></div>
 
 <form>
     <label for="countries">Choose a country:</label>
-    <select id="countries" name="countries">
-        <option value="germany" selected>Germany</option>
+    <select id="countries" name="countries" onchange="generateData(this)">
+        <option value="germany">Germany</option>
         <option value="italy">Italy</option>
         <option value="spain">Spain</option>
         <option value="france">France</option>
+        <option value="romania">Romania</option>
     </select>
 </form>
 <br>
+<button onclick="nextDestinations()">Next destinations</button>
+<br>
 
-
-
+<h1>View all destinations :</h1>
 <button onclick="next()">Next</button>
 <button onclick="previous()">Previous</button>
 
@@ -42,9 +44,8 @@
 <script>
 
 var menu = document.getElementById("countries");
-menu.addEventListener("change", generateData);
 
-function generateData(event) {
+function generateData(menu) {
     if (menu.value == 'germany') {
         getDestinations('Germany')
     } else if (menu.value == 'italy') {
@@ -53,11 +54,16 @@ function generateData(event) {
         getDestinations('Spain')
     } else if (menu.value == 'france') {
         getDestinations('Franta')
+    } else if (menu.value == 'romania') {
+        getDestinations('Romania')
     }
 }
 
-function getDestinations(countryName){
+var result;
+var index;
 
+function getDestinations(countryName){
+            index=2;
             var items;
             var url = '/api/destinations'
             clearChildren()
@@ -66,8 +72,10 @@ function getDestinations(countryName){
                          .then(res => res.json())
                          .then(json => {
                                 items = json
-                                var result = items.filter(x => x.country === countryName);
-                                result.forEach(function(dest){
+                                result = items.filter(x => x.country === countryName);
+                                console.log(result.length)
+                                var resultSliced = result.slice(0,index);
+                                resultSliced.forEach(function(dest){
                                     li = document.createElement('li')
                                     ul.appendChild(li)
 
@@ -80,8 +88,28 @@ function getDestinations(countryName){
 
 }
 
-startIndex = 0
 
+function nextDestinations(){
+console.log("destination first index")
+console.log(index)
+            clearChildren()
+            result = result.slice(index,index+2);
+            console.log(result)
+            result.forEach(function(dest){
+                      li = document.createElement('li')
+                      ul.appendChild(li)
+                      li.innerHTML += "<strong>City: </strong>" + dest.city + ", <strong> Country: </strong>" + dest.country;
+            })
+
+            index = index + 2
+
+            console.log("destination last index")
+            console.log(index)
+
+}
+
+
+startIndex = 0
 var ul = document.getElementById("list");
 document.getElementById("destinationList").appendChild(ul);
 var li;
