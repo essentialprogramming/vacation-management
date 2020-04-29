@@ -73,7 +73,6 @@ function getDestinations(countryName){
                          .then(json => {
                                 items = json
                                 result = items.filter(x => x.country === countryName);
-                                console.log(result.length)
                                 var resultSliced = result.slice(0,index);
                                 resultSliced.forEach(function(dest){
                                     li = document.createElement('li')
@@ -90,22 +89,15 @@ function getDestinations(countryName){
 
 
 function nextDestinations(){
-console.log("destination first index")
-console.log(index)
             clearChildren()
-            result = result.slice(index,index+2);
-            console.log(result)
-            result.forEach(function(dest){
+            partialResult = result.slice(index,index+2);
+            partialResult.forEach(function(dest){
                       li = document.createElement('li')
                       ul.appendChild(li)
                       li.innerHTML += "<strong>City: </strong>" + dest.city + ", <strong> Country: </strong>" + dest.country;
             })
 
             index = index + 2
-
-            console.log("destination last index")
-            console.log(index)
-
 }
 
 
