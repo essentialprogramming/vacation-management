@@ -1,8 +1,6 @@
 package com.api.resources;
 
 import com.model.Destination;
-import com.model.Skill;
-import com.model.SkillData;
 import com.service.DestinationService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -18,15 +16,6 @@ public class VacationController {
     @Autowired
     public VacationController(DestinationService service) {
         this.service = service;
-    }
-
-    @GET
-    @Path("skillsList")
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<Skill> getSkillsList() {
-
-        List<Skill> skills = SkillData.getSkillsData();
-        return skills;
     }
 
     @POST
