@@ -157,20 +157,6 @@ function previous() {
 
 }
 
-
-function formDataToJson(formElement) {
-
-	var $this = formElement
-		, viewArr = $this.serializeArray()
-		, view = {};
-
-	for (var i in viewArr) {
-		view[viewArr[i].name] = viewArr[i].value;
-	}
-
-  return view;
-}
-
 function postData(event) {
     event.preventDefault();
     const form = document.getElementById('form');
