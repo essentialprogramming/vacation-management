@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,19 +54,20 @@ public class DestinationService {
 
     @Transactional
     public List<Destination> nextDestinations(int startIndex) {
-        return repository.findAll().stream()
-                .map(DestinationMapper::entityToDestination)
-                .collect(Collectors.toList())
-                .subList(startIndex, startIndex + 4);
 
+        List<Destination> list = repository.findAll().stream()
+                .map(DestinationMapper::entityToDestination)
+                .collect(Collectors.toList());
+
+        return list.subList(Math.max(0, startIndex), Math.min(list.size(), startIndex + 4));
     }
 
     @Transactional
     public List<Destination> previousDestinations(int startIndex) {
-        return repository.findAll().stream()
+        List<Destination> list = repository.findAll().stream()
                 .map(DestinationMapper::entityToDestination)
-                .collect(Collectors.toList())
-                .subList(startIndex-4, startIndex );
+                .collect(Collectors.toList());
 
+        return list.subList(Math.max(0, startIndex - 4), Math.min(list.size(), startIndex));
     }
 }
