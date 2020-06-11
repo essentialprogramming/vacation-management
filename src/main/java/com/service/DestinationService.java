@@ -32,6 +32,12 @@ public class DestinationService {
     }
 
     @Transactional
+    public Destination getDestination(int id) {
+        DestinationEntity entity =  repository.findById(id).orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND, "Destination with id " + id + " not found."));
+        return DestinationMapper.entityToDestination(repository.save(entity));
+    }
+
+    @Transactional
     public void removeDestination(int id) {
         DestinationEntity existingDestination = repository.findById(id).orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND, "Destination with id " + id + " not found."));
         repository.delete(existingDestination);
@@ -53,7 +59,7 @@ public class DestinationService {
     }
 
     @Transactional
-    public List<Destination> nextDestinations(int startIndex) {
+    public List<Destination> getDestinations(int startIndex) {
 
         List<Destination> list = repository.findAll().stream()
                 .map(DestinationMapper::entityToDestination)

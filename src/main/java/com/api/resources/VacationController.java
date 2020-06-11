@@ -21,13 +21,21 @@ public class VacationController {
     @POST
     @Consumes("application/json")
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/destination")
+    @Path("/destinations")
     public Destination addDestination(Destination destination) {
         return service.addDestination(destination);
     }
 
+
+    @GET
+    @Path("/destinations/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Destination getDestination(@PathParam("id") int id) {
+        return service.getDestination(id);
+    }
+
     @DELETE
-    @Path("/destination/{id}")
+    @Path("/destinations/{id}")
     public void removeDestination(@PathParam("id") int id) {
         service.removeDestination(id);
     }
@@ -35,31 +43,21 @@ public class VacationController {
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes("application/json")
-    @Path("/destination/{id}")
+    @Path("/destinations/{id}")
     public Destination updateCity(@PathParam("id") int id, Destination destination) {
         return service.updateDestination(id, destination);
     }
 
+
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/destinations")
-    public List<Destination> getAll() {
-        return service.getAll();
+    public List<Destination> getNextDestinations(@QueryParam("index") int startIndex) {
+        return service.getDestinations(startIndex);
     }
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/next/{startIndex}")
-    public List<Destination> getNextDestinations(@PathParam("startIndex") int startIndex) {
-        return service.nextDestinations(startIndex);
-    }
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/previous/{previousIndex}")
-    public List<Destination> getpreviousDestinations(@PathParam("previousIndex") int previousIndex) {
-        return service.previousDestinations(previousIndex);
-    }
 
 
 }

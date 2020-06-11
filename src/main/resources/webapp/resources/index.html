@@ -4,16 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <title> Destinations </title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/magnific-popup.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/popup.css">
+    <link rel="stylesheet" href="css/magnific-popup-css.css">
 </head>
 
 <body>
 
-<h1>Destinations by country : </h1>
-<ul id="list"></ul>
-<div id="destinationList"></div>
-
+<h1>View destinations : </h1>
 <form>
-    <label for="countries">Choose a country:</label>
+    <label for="countries">Filter by country:</label>
     <select id="countries" name="countries" onchange="generateData(this)">
         <option value="germany">Germany</option>
         <option value="italy">Italy</option>
@@ -22,167 +29,82 @@
         <option value="romania">Romania</option>
     </select>
 </form>
-<br>
-<button onclick="nextDestinations()">Next destinations</button>
-<br>
+<div id="destinationList">
+    <ul id="list"></ul>
+</div>
 
-<h1>View all destinations :</h1>
-<button onclick="next()">Next</button>
-<button onclick="previous()">Previous</button>
+
+<br>
+<button class="btn-primary" onclick="previous()">Previous</button>
+<button class="btn-primary" onclick="next()">Next</button>
+
 
 <h1>Add new destination : </h1>
 <form id="form" onsubmit="postData(event)">
+
     <input id="city" name="city" placeholder="City" type="text" required>
     <input id="country" name="country" placeholder="Country" type="text" required>
     <input id="description" name="description" placeholder="Description" type="text" required>
     <input id="targets" name="targets" placeholder="Targets" type="text" required>
     <input id="cost" name="cost" placeholder="Cost" type="number" required>
-
-    <input type="submit" value="Submit">
+    <input type="submit" class="btn-primary" value="Submit">
 </form>
+
+
+
+<div class="white-popup-block mfp-hide zoom-anim-dialog" id="updatePopup">
+
+    <div id="blackDiv">
+        <h3 id="h3Id">Update</h3>
+
+    </div>
+    <div id="whiteDiv">
+        <br>
+        <h1>Update destination : </h1>
+        <form id="updateForm" onsubmit="updateDestination(event)">
+            <input id="city2" name="city" placeholder="City" type="text" required>
+            <input id="country2" name="country" placeholder="Country" type="text" required>
+            <input id="description2" name="description" placeholder="Description" type="text" required>
+            <input id="targets2" name="targets" placeholder="Targets" type="text" required>
+            <input id="cost2" name="cost" placeholder="Cost" type="number" required>
+            <input type="submit" class="btn-primary" value="Update">
+        </form>
+
+        <br>
+    </div>
+</div>
+
+
+<div id="delete-modal" class="white-popup-block mfp-hide zoom-anim-dialog info-modal">
+
+    <div id="black-header-modal">
+        <div id="confirm-title">Are you sure ? </div>
+    </div>
+
+    <div class="row no-marg-left-pop">
+        <div class="col-md-2">
+            <i id="question-mark-blue" class="fa fa-question-circle fa-4x"></i>
+        </div>
+
+        <div class="col-md-10">
+            <div id="padding-info-popup"></div>
+        </div>
+    </div>
+
+    <div class="row selection-btn-info">
+            <span class="form-group">
+                <button class="btn btn-default" id="status-confirm-ok"> Delete</button>
+            </span>
+
+        <span class="form-group">
+                <button class="btn btn-default" id="status-confirm-cancel">Cancel</button>
+            </span>
+    </div>
+</div>
 
 <script>
 
-var menu = document.getElementById("countries");
-
-function generateData(menu) {
-    if (menu.value == 'germany') {
-        getDestinations('Germany')
-    } else if (menu.value == 'italy') {
-        getDestinations('Italy')
-    } else if (menu.value == 'spain') {
-        getDestinations('Spain')
-    } else if (menu.value == 'france') {
-        getDestinations('Franta')
-    } else if (menu.value == 'romania') {
-        getDestinations('Romania')
-    }
-}
-
-var result;
-var index;
-
-function getDestinations(countryName){
-            index=2;
-            var items;
-            var url = '/api/destinations'
-            clearChildren()
-
-            fetch(url)
-                         .then(res => res.json())
-                         .then(json => {
-                                items = json
-                                result = items.filter(x => x.country === countryName);
-                                var resultSliced = result.slice(0,index);
-                                resultSliced.forEach(function(dest){
-                                    li = document.createElement('li')
-                                    ul.appendChild(li)
-
-                                    li.innerHTML += "<strong>City: </strong>" + dest.city + ", <strong> Country: </strong>" + dest.country;
-                            })
-                         })
-                         .catch(function(error) {
-                                console.log(error);
-                         });
-
-}
-
-
-function nextDestinations(){
-            clearChildren()
-            partialResult = result.slice(index,index+2);
-            partialResult.forEach(function(dest){
-                      li = document.createElement('li')
-                      ul.appendChild(li)
-                      li.innerHTML += "<strong>City: </strong>" + dest.city + ", <strong> Country: </strong>" + dest.country;
-            })
-
-            index = index + 2
-}
-
-
-startIndex = 0
-var ul = document.getElementById("list");
-document.getElementById("destinationList").appendChild(ul);
-var li;
-
-function clearChildren(){
-    while (ul.lastElementChild) {
-          ul.removeChild(ul.lastElementChild);
-    }
-}
-
-function next() {
-            var items;
-            var url = '/api/next/'+startIndex
-
-            clearChildren()
-
-            fetch(url)
-                         .then(res => res.json())
-                         .then(json => {
-                                items = json
-                                items.forEach(function(dest){
-                                    li = document.createElement('li')
-                                    ul.appendChild(li)
-
-                                    li.innerHTML += "<strong>City: </strong>" + dest.city + ", <strong> Country: </strong>" + dest.country;
-                            })
-                         })
-                         .catch(function(error) {
-                                console.log(error);
-                         });
-            startIndex = startIndex + 4
-}
-
-function previous() {
-            var items;
-            startIndex = startIndex - 4
-            var url = 'api/previous/'+startIndex
-            clearChildren()
-            fetch(url)
-                         .then(res => res.json())
-                         .then(json => {
-                                items = json
-                                items.forEach(function(dest){
-                                    li = document.createElement('li')
-                                    ul.appendChild(li)
-
-                                    li.innerHTML += "<strong>City: </strong>" + dest.city + ", <strong> Country: </strong>" + dest.country;
-                            })
-                         })
-                         .catch(function(error) {
-                                console.log(error);
-                         });
-
-}
-
-function postData(event) {
-    event.preventDefault();
-    const form = document.getElementById('form');
-    let rawData = new FormData(form);
-
-    let data = {};
-    for(let pair of rawData.entries()) {
-     data[pair[0]] = pair[1];
-    }
-    var targetList = data.targets.split(",");
-    data.targets = targetList
-    let contactData = JSON.stringify(data);
-
-    new Promise((resolve, reject) => {
-            const xhr = new XMLHttpRequest();
-                    xhr.open('POST', '/api/destination');
-                    xhr.setRequestHeader('Content-Type', 'application/json');
-                    xhr.onerror = () => reject(xhr.statusText);
-                    xhr.send(contactData);
-    });
-
-}
-
-
-
-
+    sessionStorage.startIndex = -1;
 
 </script>
 
