@@ -127,8 +127,14 @@ function next() {
             items.forEach(function(dest){
                 let li = document.createElement('li');
                 ul.appendChild(li);
-
-                li.innerHTML += "<strong>City: </strong>" + dest.city + ", <strong> Country: </strong>" + dest.country + " " + "<button class='btn-primary' onclick='openUpdatePopup(" + dest.id + ")'>Update</button>" + " " +  "<button class='btn-primary' onclick='openDeletePopup(" + dest.id + ")'>Delete</button>";
+                let myHTML = `
+                        <div class="myDiv">
+                          <span><strong>City: </strong>  ${dest.city} ,</span>
+                          <span><strong>Country: </strong>  ${dest.country}  </span>
+                          <span><button class='btn-primary' onclick='openUpdatePopup(${dest.id})'>Update</button></span>
+                          <span><button class='btn-primary' onclick='openDeletePopup(${dest.id})'>Delete</button></span>
+                        </div>  `
+                li.innerHTML += myHTML;
             })
         })
         .catch(function(error) {
@@ -151,7 +157,14 @@ function previous() {
                 let li = document.createElement('li');
                 ul.appendChild(li);
 
-                li.innerHTML += "<strong>City: </strong>" + dest.city + ", <strong> Country: </strong>" + dest.country + " " + "<button class='btn-primary' onclick='openUpdatePopup(" + dest.id + ")'>Update</button>" + " " + "<button class='btn-primary' onclick='openDeletePopup(" + dest.id + ")'>Delete</button>";
+                let myHTML = `
+                        <div class="myDiv">
+                          <span><strong>City: </strong>  ${dest.city} ,</span>
+                          <span><strong>Country: </strong>  ${dest.country}  </span>
+                          <span><button class='btn-primary' onclick='openUpdatePopup(${dest.id})'>Update</button></span>
+                          <span><button class='btn-primary' onclick='openDeletePopup(${dest.id})'>Delete</button></span>
+                        </div>  `
+                li.innerHTML += myHTML;
             })
         })
         .catch(function(error) {
