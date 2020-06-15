@@ -8,6 +8,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="js/header.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/popup.js"></script>
     <script src="js/main.js"></script>
     <script src="js/magnific-popup.js"></script>
 
@@ -20,18 +23,34 @@
 <body>
 
 <h1>View destinations : </h1>
+
 <form>
+  <div class="form-row">
+
     <label for="countries">Filter by country:</label>
     <select id="countries" name="countries" onchange="generateData(this)">
+        <option disabled selected value> -- Select an option --</option>
         <option value="germany">Germany</option>
         <option value="italy">Italy</option>
         <option value="spain">Spain</option>
         <option value="france">France</option>
         <option value="romania">Romania</option>
     </select>
+
+    <label for="cities">Filter by city:</label>
+    <select id="cities" name="cities" onchange="generateData(this)">
+        <option disabled selected value> -- Select an option --</option>
+        <option value="Munich">Munich</option>
+        <option value="Bucuresti">Bucuresti</option>
+        <option value="Cluj">Cluj</option>
+        <option value="Sibiu">Sibiu</option>
+    </select>
+
+  </div>
 </form>
+
+
 <div id="destinationList">
-    <ul id="list"></ul>
 </div>
 
 
@@ -52,63 +71,12 @@
 </form>
 
 
+<div data-include="popup.html"></div>
 
-<div class="white-popup-block mfp-hide zoom-anim-dialog" id="updatePopup">
-
-    <div id="blackDiv">
-        <h3 id="h3Id">Update</h3>
-
-    </div>
-    <div id="whiteDiv">
-        <br>
-        <h1>Update destination : </h1>
-        <form id="updateForm" onsubmit="updateDestination(event)">
-            <input id="city2" name="city" placeholder="City" type="text" required>
-            <input id="country2" name="country" placeholder="Country" type="text" required>
-            <input id="description2" name="description" placeholder="Description" type="text" required>
-            <input id="targets2" name="targets" placeholder="Targets" type="text" required>
-            <input id="cost2" name="cost" placeholder="Cost" type="number" required>
-            <input type="submit" class="btn-primary" value="Update">
-        </form>
-
-        <br>
-    </div>
-</div>
-
-
-<div id="delete-modal" class="white-popup-block mfp-hide zoom-anim-dialog info-modal">
-
-    <div id="black-header-modal">
-        <div id="confirm-title">Are you sure ? </div>
-    </div>
-
-    <div class="row no-marg-left-pop">
-        <div class="col-md-2">
-            <i id="question-mark-blue" class="fa fa-question-circle fa-4x"></i>
-        </div>
-
-        <div class="col-md-10">
-            <div id="padding-info-popup"></div>
-        </div>
-    </div>
-
-    <div class="row selection-btn-info">
-            <span class="form-group">
-                <button class="btn btn-default" id="status-confirm-ok"> Delete</button>
-            </span>
-
-        <span class="form-group">
-                <button class="btn btn-default" id="status-confirm-cancel">Cancel</button>
-            </span>
-    </div>
-</div>
 
 <script>
-
     sessionStorage.startIndex = -1;
-
 </script>
-
 
 </body>
 </html>

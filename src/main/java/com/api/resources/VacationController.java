@@ -2,6 +2,7 @@ package com.api.resources;
 
 import com.model.Destination;
 import com.service.DestinationService;
+import com.web.json.JsonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.ws.rs.*;
@@ -36,8 +37,12 @@ public class VacationController {
 
     @DELETE
     @Path("/destinations/{id}")
-    public void removeDestination(@PathParam("id") int id) {
+    @Produces(MediaType.APPLICATION_JSON)
+    public JsonResponse removeDestination(@PathParam("id") int id) {
         service.removeDestination(id);
+        return new JsonResponse()
+                .with("status", "success")
+                .done();
     }
 
     @PUT
