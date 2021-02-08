@@ -14,3 +14,15 @@ create table if not exists destination
 );
 ```
 
+```MySQL
+create table if not exists destination
+(
+    id          int auto_increment primary key,
+    city        varchar(100) null,
+    country     varchar(100) null,
+    description varchar(100) null,
+    targets     varchar(200) null,
+    cost        float        null,
+    CountryId   varchar(255) null
+);
+```
