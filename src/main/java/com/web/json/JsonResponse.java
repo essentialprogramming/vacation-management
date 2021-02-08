@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class JsonResponse {
 
-    protected Map<String, Object> map = new LinkedHashMap<String, Object>();
+    protected Map<String, Object> map = new LinkedHashMap<>();
 
     public JsonResponse() {
     }

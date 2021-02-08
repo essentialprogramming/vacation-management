@@ -29,12 +29,11 @@ public class JPAConfig {
        config.setConnectionTimeout(3000);
        config.setIdleTimeout(TimeUnit.SECONDS.toMillis(10));
        config.setValidationTimeout(TimeUnit.SECONDS.toMillis(2));
-       config.setDriverClassName(org.postgresql.Driver.class.getName());
+       config.setDriverClassName(com.mysql.jdbc.Driver.class.getName());
 
-       config.setJdbcUrl("jdbc:postgresql://localhost:5432/vacation");
-       config.setUsername("postgres");
-       config.setPassword("postgres");
-
+       config.setJdbcUrl("jdbc:mysql://localhost:3306/vacation");
+       config.setUsername("root");
+       config.setPassword("root");
        return new HikariDataSource(config);
    }
 

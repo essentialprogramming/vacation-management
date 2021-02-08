@@ -1,0 +1,42 @@
+/* Style the navbar */
+.navbar {
+  overflow: hidden;
+  background-color: #337ab7;
+  color:#ffffff;
+  border: 0 #337ab7;
+  border-radius:0;
+  margin-bottom: 0;
+}
+.navbar-nav > li > a {
+  color:#fff;
+  padding-left:20px;
+  padding-right:20px;
+}
+.navbar-nav > li > a:hover, .navbar-nav > li > a:focus {
+  color:#666666;
+}
+
+.navbar-nav > .active > a, .navbar-nav > .active > a:hover, .navbar-nav > .active > a:focus {
+  color: #ffffff;
+  background-color:transparent;
+}
+.navbar-nav > .open > a, .navbar-nav > .open > a:hover, .navbar-nav > .open > a:focus {
+  color: #f0f0f0;
+  background-color:transparent;
+  opacity:.9;
+  border-color:#ff3333;
+}
+
+.nav .open > a {
+  border: 0 #777777;
+}
+
+
+.navbar-toggle {
+  color:#fff;
+  border-width:0;
+}
+
+.navbar-toggle:hover {
+  background-color:#fff;
+}

@@ -1,6 +1,9 @@
 package com.service;
 
 import com.entities.DestinationEntity;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mapper.DestinationMapper;
 import com.model.Destination;
 import com.repository.DestinationRepository;
@@ -10,7 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -59,12 +64,19 @@ public class DestinationService {
     }
 
     @Transactional
-    public List<Destination> getDestinations(int startIndex) {
+    public List<Destination> getDestinations(String json) {
 
         List<Destination> list = repository.findAll().stream()
                 .map(DestinationMapper::entityToDestination)
                 .collect(Collectors.toList());
 
+        int startIndex = 0;
+        try {
+            Map<String, Object> filter = new ObjectMapper().readValue(json, new TypeReference<Map<String, Object>>(){});
+            startIndex = (int) filter.get("index");
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
         return list.subList(Math.max(0, startIndex), Math.min(list.size(), startIndex + 4));
     }
 

@@ -17,10 +17,32 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/popup.css">
+    <link rel="stylesheet" href="css/navbar.css">
     <link rel="stylesheet" href="css/magnific-popup-css.css">
 </head>
 
 <body>
+
+<div class="navbar">
+    <ul class="nav navbar-nav">
+        <li class="active">
+            <a href="/">Home</a>
+        </li>
+
+        <li class="active">
+            <a href="javascript:void(0);" onclick="openAddPopup()"> Add Destination </a>
+        </li>
+        <li class="active">
+            <a href="javascript:void(0);" onclick="saveDestinations()"> Save </a>
+        </li>
+    </ul>
+
+    <ul class="nav navbar-nav navbar-right" style="margin-right: 10px;">
+        <li class="active">
+            <a href="logout.php">Logout</a>
+        </li>
+    </ul>
+</div>
 
 <h1>View destinations : </h1>
 

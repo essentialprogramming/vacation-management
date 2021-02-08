@@ -5,12 +5,17 @@ import com.service.DestinationService;
 import com.web.json.JsonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 @Path("/")
 public class VacationController {
+
+    @Context
+    private HttpServletRequest httpRequest;
 
     private DestinationService service;
 
@@ -58,8 +63,8 @@ public class VacationController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/destinations")
-    public List<Destination> getNextDestinations(@QueryParam("index") int startIndex) {
-        return service.getDestinations(startIndex);
+    public List<Destination> getDestinations(@QueryParam("filter") String filter) {
+        return service.getDestinations(filter);
     }
 
 

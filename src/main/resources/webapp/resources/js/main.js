@@ -1,3 +1,5 @@
+let destinations = [];
+
 docReady(function () {
 
 
@@ -6,31 +8,18 @@ docReady(function () {
 
 function postData(event) {
     event.preventDefault();
-    const form = document.getElementById('form');
-    let rawData = new FormData(form);
-
-    let data = {};
-    for(let pair of rawData.entries()) {
-        data[pair[0]] = pair[1];
-    }
+    let data = Utils.formToJSON('form');
     let targetList = data.targets.split(",");
     data.targets = targetList
-    let contactData = JSON.stringify(data);
+    let destination = JSON.stringify(data);
 
-    let promise = new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open('POST', '/api/destinations');
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.onload = (response) => resolve(response.currentTarget.responseText);
-        xhr.onerror = () => reject(xhr.statusText);
-        xhr.send(contactData);
-    });
+    let promise = Utils.post('/api/destinations', destination);
     promise
         .then(responseText => {
             let json = JSON.parse(responseText);
             getDestinations();
         })
-        .catch(function(error) {
+        .catch(function (error) {
             console.log(error);
         });
 
@@ -55,41 +44,44 @@ async function openUpdatePopup(destinationId) {
         data: response
     });
 
-    if (answer){
-        updateDestination(destinationId, JSON.parse(answer));
+    if (answer) {
+        updateDestination(destinationId, answer);
         console.log(answer);
     }
 }
 function updateDestination(id, data) {
 
-
+    console.log(id, data);
     let targetList = data.targets.split(",");
     data.targets = targetList;
     let jsonData = JSON.stringify(data);
-
-    new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open('PUT', '/api/destinations/' + id);
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.onerror = () => reject(xhr.statusText);
-        xhr.send(jsonData);
-    });
-
+    let promise = Utils.put('/api/destinations/' + id, jsonData);
 
 }
 
-function getDestinations(){
+function getDestinations() {
     let destinationDiv = document.getElementById("destinationList");
     let items;
-    let url = '/api/destinations?index=' +  sessionStorage.getItem("startIndex")
+
+    let filter = {
+        index: Number(sessionStorage.getItem("startIndex"))
+    }
+    let url = '/api/destinations?filter=' + encodeURIComponent(JSON.stringify(filter));
+
+    let sample = {
+        city: "Dubai",
+        country: "No bine",
+        description: "bine de tat"
+    }
+
 
     fetch(url)
         .then(res => res.json())
         .then(json => {
             items = json
-            destinationDiv.innerHTML = createDestinationsList(items);
+            destinationDiv.innerHTML = createDestinationsList(Utils.union(items, [sample]));
         })
-        .catch(function(error) {
+        .catch(function (error) {
             console.log(error);
         });
 
@@ -99,25 +91,36 @@ function next() {
     if (sessionStorage.startIndex == -1)
         sessionStorage.startIndex = 0;
     else
-        sessionStorage.startIndex =  Number(sessionStorage.startIndex) + 4;
+        sessionStorage.startIndex = Number(sessionStorage.startIndex) + 4;
     getDestinations();
 
 }
 
 function previous() {
-    sessionStorage.startIndex =  Number (sessionStorage.startIndex) - 4;
+    sessionStorage.startIndex = Number(sessionStorage.startIndex) - 4;
     getDestinations();
 
 }
 
 function createDestinationsList(items) {
     const rows = items.map(dest => {
+        let className = [
+            "classAlwaysPresent",
+            ...Array.from(dest.cost < 100 && ["classIfnotTrue"]),
+            ...Array.from(dest.cost > 100 && ["classIfTrue"])]
+            .join(" ");
+
+        let disabled = [
+            ...Array.from(dest.cost > 1000 && ["disabled"]),
+            ...Array.from(dest.cost < 1000 && [""])]
+            .join(" ");
+
         return `<li>
-         <div class="myDiv">
+         <div class="${className}">
              <span class="city"><strong>City: </strong>  ${dest.city} ,</span>
              <span class="country"><strong>Country: </strong>  ${dest.country}  </span>
-             <span><button class='btn-primary' onclick='openUpdatePopup(${dest.id})'>Update</button></span>
-             <span><button class='btn-primary' onclick='openDeletePopup(${dest.id})'>Delete</button></span>
+             <span><button class='btn-primary' onclick='openUpdatePopup(${dest.id})' ${disabled}>Update</button></span>
+             <span><button class='btn-primary' onclick='openDeletePopup(${dest.id})' ${disabled}>Delete</button></span>
          </div> 
       </li>`;
     });
@@ -126,34 +129,13 @@ function createDestinationsList(items) {
 
 
 function generateData(menu) {
-/*    if (menu.value === 'germany') {
-        getDestinations('Germany')
-    } else if (menu.value === 'italy') {
-        getDestinations('Italy')
-    } else if (menu.value === 'spain') {
-        getDestinations('Spain')
-    } else if (menu.value === 'france') {
-        getDestinations('France')
-    } else if (menu.value === 'romania') {
-        getDestinations('Romania')
-    }*/
+
     Utils.filterList('list', 'countries', 'cities', 'country', 'city')
 }
 
 
 
 async function openDeletePopup(id) {
-/*    sessionStorage.deleteID = id;
-    openPopup("#delete-modal", null, false);
-    document.getElementById("status-confirm-ok").onclick = function () {
-        deleteDestination(sessionStorage.deleteID);
-        $.magnificPopup.close();
-    };
-
-    document.getElementById('status-confirm-cancel').onclick = function () {
-        $.magnificPopup.close();
-
-    };*/
 
     const answer = await modal({
         popupId: "delete-modal",
@@ -161,7 +143,7 @@ async function openDeletePopup(id) {
         cancel: true
     });
 
-    if (answer === 'confirm'){
+    if (answer === 'confirm') {
         deleteDestination(id);
         console.log(answer);
     }
@@ -170,14 +152,47 @@ async function openDeletePopup(id) {
 }
 
 function deleteDestination(id) {
-/*    return fetch(`/api/destinations/${id}`, {method: 'DELETE'} )
+    return fetch(`/api/destinations/${id}`, { method: 'DELETE' })
         .then(response => response.json())
         .then(json => {
             getDestinations();
         })
-        .catch(function(error) {
+        .catch(function (error) {
             console.log(error);
-        });*/
+        });
 }
+
+async function openAddPopup() {
+
+    const answer = await modal({
+        popupId: "updatePopup",
+        title: "Add destination",
+        cancel: false
+    });
+
+    if (answer) {
+        let targetList = answer.targets.split(",");
+        answer.targets = targetList;
+        destinations.push(answer);
+        console.log(answer);
+    }
+}
+
+async function saveDestinations() {
+
+    let destinationsJSON = JSON.stringify(destinations);
+    console.log(destinationsJSON);
+    let promise = Utils.post('/api/destinations/batch', destinationsJSON);
+    promise
+        .then(responseText => {
+            let json = JSON.parse(responseText);
+            getDestinations();
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
+
+
 
 

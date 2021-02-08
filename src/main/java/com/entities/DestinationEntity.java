@@ -1,10 +1,8 @@
 package com.entities;
 
 
-import com.vladmihalcea.hibernate.type.array.ListArrayType;
+import com.util.list.StringListConverter;
 import lombok.*;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
 import java.util.List;
@@ -15,10 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@TypeDef(
-        name = "list-array",
-        typeClass = ListArrayType.class
-)
 public class DestinationEntity {
 
     @Id
@@ -35,7 +29,7 @@ public class DestinationEntity {
     @Column(name = "description")
     private String description;
 
-    @Type(type = "list-array")
+    @Convert(converter = StringListConverter.class)
     @Column(name = "targets")
     private List<String> targets;
 
