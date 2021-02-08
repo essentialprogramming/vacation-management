@@ -1,7 +1,7 @@
 # Vacation management
 
 ### 💎 Database schema
-
+## Postgres
 ```postgres-psql
 create table if not exists destination
 (
@@ -14,6 +14,7 @@ create table if not exists destination
 );
 ```
 
+## MySQL
 ```MySQL
 create table if not exists destination
 (
@@ -22,7 +23,6 @@ create table if not exists destination
     country     varchar(100) null,
     description varchar(100) null,
     targets     varchar(200) null,
-    cost        float        null,
-    CountryId   varchar(255) null
+    cost        float        null
 );
 ```
