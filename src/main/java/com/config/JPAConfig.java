@@ -31,9 +31,9 @@ public class JPAConfig {
        config.setValidationTimeout(TimeUnit.SECONDS.toMillis(2));
        config.setDriverClassName(com.mysql.jdbc.Driver.class.getName());
 
-       config.setJdbcUrl("jdbc:mysql://localhost:3306/vacation");
+       config.setJdbcUrl("jdbc:mysql://157.230.97.107:3306/vacation");
        config.setUsername("root");
-       config.setPassword("root");
+       config.setPassword("a9317d93e62f8749f242f25cca1b0126dda06df4323f476f");
        return new HikariDataSource(config);
    }
 
