@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @Service
 public class DestinationService {
 
-    private DestinationRepository repository;
+    private final DestinationRepository repository;
 
     @Autowired
     public DestinationService(DestinationRepository repository) {

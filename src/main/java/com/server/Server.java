@@ -11,23 +11,13 @@ import java.util.concurrent.locks.Condition;
 
 public class Server {
 
-    public static void main(String[] args)
-            throws ServletException {
+    public static void main(String[] args) throws ServletException {
 
         final String host = getProperty("undertow.host", "localhost");
         final Integer port = getProperty("undertow.port", 8080);
 
-        final UndertowServer server = new UndertowServer(host, port, "undertow-spring-persistence.war");
-
-        final Condition newCondition = server.LOCK.newCondition();
-
+        final UndertowServer server = new UndertowServer(host, port, "vacation-management.war");
         server.start();
-        try {
-            while (true)
-                newCondition.awaitNanos(1);
-        } catch (InterruptedException cause) {
-            server.stop();
-        }
     }
 
 }

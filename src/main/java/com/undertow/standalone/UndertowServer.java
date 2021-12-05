@@ -33,7 +33,6 @@ import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.WebApplicationContext;
 
 import static com.util.cloud.DeploymentConfiguration.getProperty;
-import static io.undertow.Handlers.websocket;
 
 public final class UndertowServer {
 
@@ -104,8 +103,9 @@ public final class UndertowServer {
                 .setHandler(shutdown)
                 .setServerOption(UndertowOptions.ENABLE_HTTP2, true)
                 .build();
-
         server.start();
+
+        LOCK.unlock();
     }
 
 

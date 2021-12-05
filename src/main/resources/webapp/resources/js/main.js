@@ -88,7 +88,7 @@ function getDestinations() {
 }
 
 function next() {
-    if (sessionStorage.startIndex == -1)
+    if (sessionStorage.startIndex === -1)
         sessionStorage.startIndex = 0;
     else
         sessionStorage.startIndex = Number(sessionStorage.startIndex) + 4;
@@ -171,8 +171,7 @@ async function openAddPopup() {
     });
 
     if (answer) {
-        let targetList = answer.targets.split(",");
-        answer.targets = targetList;
+        answer.targets = answer.targets.split(",");
         destinations.push(answer);
         console.log(answer);
     }

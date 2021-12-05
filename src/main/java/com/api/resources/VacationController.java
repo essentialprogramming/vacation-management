@@ -3,6 +3,7 @@ package com.api.resources;
 import com.model.Destination;
 import com.service.DestinationService;
 import com.web.json.JsonResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,13 +12,14 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
+@Tag(description = "Vacation API", name = "Vacation Services")
 @Path("/")
 public class VacationController {
 
     @Context
     private HttpServletRequest httpRequest;
 
-    private DestinationService service;
+    private final DestinationService service;
 
     @Autowired
     public VacationController(DestinationService service) {
